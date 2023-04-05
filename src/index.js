@@ -7,7 +7,7 @@ const app = express()
 const PORT = process.env.PORT || 5555
 
 let onlineUsers = [];
-let onlineAmmount = 0
+// let onlineAmmount = 0
 
 app.use(cors())  // prevent errors
 
@@ -22,8 +22,8 @@ const io = new Server(server, { // creates a socket io server
 
 //detects if someone connected to the server
 io.on("connection", (socket) => {  // user connected
-    onlineAmmount += 1
-    console.log(`user connected:  + ${socket.id}\nonline ammount: ${onlineAmmount}`)
+    // onlineAmmount += 1
+    console.log(`user connected:  + ${socket.id}`)
 
     socket.on("join_room", (data) => {
         socket.join(data)  // joins a room
@@ -32,6 +32,7 @@ io.on("connection", (socket) => {  // user connected
 
     // sends messages
     socket.on("send_message", (data) => {   // gets the message that was sent
+        console.log(data)
         socket.to(data.room).emit("receive_message", data) // sends the message to the socket room
     })
     
@@ -42,24 +43,25 @@ io.on("connection", (socket) => {  // user connected
       console.log("new user is here!", onlineUsers);
     }
     // send all active users to new user
-    io.emit("get-users", onlineUsers);
+    socket.emit("get-users", onlineUsers);
   });
 
   socket.on("disconnect", () => {
-    onlineAmmount += 1
+    // onlineAmmount += 1
     onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
     console.log("user disconnected", onlineUsers);
     // send all online users to all users
-    io.emit("get-users", onlineUsers);
+    socket.emit("get-users", onlineUsers);
   });
 
-  socket.on("offline", () => {
-    // remove user from active users
-    onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
-    console.log("user is offline", onlineUsers);
-    // send all online users to all users
-    io.emit("get-users", onlineUsers);
-  });
+//   socket.on("offline", () => {
+//     // onlineAmmount += 1
+//     // remove user from active users
+//     onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
+//     console.log("user is offline", onlineUsers);
+//     // send all online users to all users
+//     socket.emit("get-users", onlineUsers);
+//   });
 }) 
 
 server.listen(PORT, () => {
