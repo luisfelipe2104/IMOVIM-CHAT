@@ -23,7 +23,7 @@ const io = new Server(server, { // creates a socket io server
 //detects if someone connected to the server
 io.on("connection", (socket) => {  // user connected
     // onlineAmmount += 1
-    console.log(`user connected:  + ${socket.id}`)
+    console.log(`user connected:  + ${socket.id} \n users online: ${onlineUsers.length}`)
 
     socket.on("join_room", (data) => {
         socket.join(data)  // joins a room
@@ -49,7 +49,7 @@ io.on("connection", (socket) => {  // user connected
   socket.on("disconnect", () => {
     // onlineAmmount += 1
     onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
-    console.log("user disconnected", onlineUsers);
+    console.log(`user disconnected: ${onlineUsers} \n users online: ${onlineUsers.length}`);
     // send all online users to all users
     socket.emit("get-users", onlineUsers);
   });
