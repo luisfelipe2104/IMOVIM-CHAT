@@ -7,7 +7,6 @@ const app = express()
 const PORT = process.env.PORT || 5555
 
 let onlineUsers = [];
-// let onlineAmmount = 0
 
 app.use(cors())  // prevent errors
 
