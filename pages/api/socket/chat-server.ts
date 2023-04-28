@@ -4,7 +4,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 let onlineUsers: any = [];
 
 const SocketHandler = async (req: NextApiRequest, res: any) => {
-  const io = new Server(res.socket.server);
+  const io = new Server(res.socket.server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+  });
   res.socket.server.io = io;
   console.log('Server is running');
   
